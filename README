@@ -1,0 +1,99 @@
+# What is `choo.php`?
+
+`choo.php` allows the use of method chaining on existing objects, without
+modifying the original object in any way.
+
+## Using `choo`
+
+Firstly, you'll need to include the `choo.php` file.
+
+    include("choo/choo.php");
+
+All of our examples will assume this object:
+
+    class User {
+
+        var $Name;
+        var $Age;
+
+        function SetName($name) {
+            $this->Name = $name;
+        }
+
+        function SetAge($age) {
+            $this->Age = $age;
+        }
+
+        function GetDetails() {
+            return sprintf("%s is %s years old.", $this->Name, $this->Age);
+        }
+
+        function Output() {
+            print $this->GetDetails();
+        }
+
+    }
+
+
+### Example 1. Method Chaining
+
+The following example will modify an existing instance of `User`, setting the
+name and the age, using the defined functions.
+    
+    $user = new User();
+
+    choo($user)
+        ->SetName("Alice")
+        ->SetAge(24)
+        ->Output();
+
+### Example 2. Temporary Objects
+
+Of course, we can pass in a `new ...` reference to `choo`:
+
+    choo(new User)
+        ->SetName("Bob")
+        ->SetAge(40)
+        ->Output();
+
+
+### Example 3. Spitting Out
+
+We can ask `choo` to spit out our object once we're done with it:
+
+    $newUser = choo(new User)
+                ->SetName("Charlie")
+                ->SetAge(37)
+                ->spit();
+
+We now have a new `User` object in our `$newUser` variable.
+
+### Example 4. Returning
+
+If a method returns something, it immediately terminates the chaining.
+
+    choo(new User)
+        ->SetName("David")
+        ->SetAge(58)
+        ->GetDetails()
+        ->SetAge(12);   // because `GetDetails` returns a string, this
+                        // will fire an error.
+
+We can capture the return value of a method, as you would with any other method:
+
+    $details = choo(new User)
+                ->SetName("Eddie")
+                ->SetAge(14)
+                ->GetDetails();
+
+
+## Author
+
+`choo.php` was written by Bauer (bauer-[at]-glassoforange.co.uk) and is licensed under Apache v2.2.
+
+*Refer to `LICENSE` for a full license.*
+
+## Thanks
+
+Thanks to DG for sitting over my shoulder and telling me what ugly
+code looks like.
